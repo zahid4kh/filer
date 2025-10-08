@@ -32,6 +32,7 @@ class MainViewModel(
     }
 
     data class UiState(
-        val darkMode: Boolean = false
+        val darkMode: Boolean = false,
+        val currentPath: String = System.getProperty("user.home")
     )
 }

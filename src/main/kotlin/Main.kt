@@ -15,7 +15,7 @@ import org.koin.core.context.startKoin
 import org.koin.java.KoinJavaComponent.getKoin
 import filer.resources.*
 import org.jetbrains.compose.resources.painterResource
-import ui.MainScreen
+import ui.App
 import ui.TopBar
 
 
@@ -54,7 +54,7 @@ fun main() = application {
                     windowState = windowState
                 )
 
-                MainScreen(
+                App(
                     viewModel = viewModel,
                     uiState = uiState
                 )

@@ -5,6 +5,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
+import androidx.compose.ui.window.WindowPlacement
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
 import di.appModule
@@ -25,10 +26,13 @@ fun main() = application {
 
     val viewModel = getKoin().get<MainViewModel>()
     val uiState by viewModel.uiState.collectAsState()
+    val windowState = rememberWindowState(
+        size = DpSize(800.dp, 600.dp)
+    )
 
     Window(
         onCloseRequest = ::exitApplication,
-        state = rememberWindowState(size = DpSize(800.dp, 600.dp)),
+        state = windowState,
         alwaysOnTop = true,
         title = "Filer",
         undecorated = true,
@@ -38,7 +42,17 @@ fun main() = application {
 
         AppTheme {
             Column{
-                TopBar()
+                TopBar(
+                    onMinimizeWindow = { windowState.isMinimized = true },
+                    onHandleWindowSize = {
+                        windowState.placement = if (windowState.placement == WindowPlacement.Maximized)
+                            WindowPlacement.Floating
+                        else
+                            WindowPlacement.Maximized
+                    },
+                    onCloseApplication = { exitApplication() },
+                    windowState = windowState
+                )
 
                 MainScreen(
                     viewModel = viewModel,

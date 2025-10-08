@@ -1,15 +1,112 @@
 package ui
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.window.WindowDraggableArea
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.CropSquare
+import androidx.compose.material.icons.filled.Minimize
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.PointerIcon
+import androidx.compose.ui.input.pointer.pointerHoverIcon
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.WindowPlacement
+import androidx.compose.ui.window.WindowScope
+import androidx.compose.ui.window.WindowState
 
 @Composable
-fun TopBar(){
-    Row(
-        modifier = Modifier.fillMaxWidth()
-    ){
+fun WindowScope.TopBar(
+    onMinimizeWindow: () -> Unit,
+    onCloseApplication: () -> Unit,
+    onHandleWindowSize: () -> Unit,
+    windowState: WindowState
+){
+    WindowDraggableArea {
+        Box(
+           modifier = Modifier
+               .fillMaxWidth()
+               .background(MaterialTheme.colorScheme.background)
+        ){
+            Text(
+                text = "Filer",
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onBackground,
+                modifier = Modifier.align(Alignment.Center)
+            )
+            Row(
+                modifier = Modifier
+                    .align(Alignment.CenterEnd),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(5.dp)
+            ){
+                TopBarIcon(
+                    onClick = { onMinimizeWindow() },
+                    tooltipText = "Minimize",
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Default.Minimize,
+                            tint = MaterialTheme.colorScheme.onBackground,
+                            contentDescription = null
+                        )
+                    }
+                )
+
+                TopBarIcon(
+                    onClick = { onHandleWindowSize() },
+                    tooltipText = if (windowState.placement == WindowPlacement.Maximized) "Restore Down" else "Maximize",
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Default.CropSquare,
+                            tint = MaterialTheme.colorScheme.onBackground,
+                            contentDescription = null
+                        )
+                    }
+                )
+
+                TopBarIcon(
+                    onClick = { onCloseApplication() },
+                    tooltipText = "Close",
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Default.Close,
+                            tint = MaterialTheme.colorScheme.onBackground,
+                            contentDescription = null
+                        )
+                    }
+                )
+            }
+        }
 
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun TopBarIcon(
+    onClick: () -> Unit,
+    tooltipText: String,
+    icon: @Composable () -> Unit
+){
+    TooltipBox(
+        positionProvider = TooltipDefaults.rememberPlainTooltipPositionProvider(),
+        tooltip = {
+            PlainTooltip { Text(tooltipText, style = MaterialTheme.typography.bodySmall) }
+        },
+        state = rememberTooltipState()
+    ){
+        IconButton(
+            onClick = { onClick() },
+            modifier = Modifier.pointerHoverIcon(PointerIcon.Hand)
+        ){
+            icon()
+        }
+    }
+
 }

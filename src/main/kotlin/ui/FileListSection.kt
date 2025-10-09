@@ -26,7 +26,7 @@ fun FileListSection(
         modifier = Modifier.padding(start = 5.dp, end = 5.dp)
     ){
         items(
-            items = uiState.files
+            items = uiState.files.sorted()
         ){ item ->
             if(File(item).isDirectory){
                 FolderItem(
@@ -39,7 +39,6 @@ fun FileListSection(
                     item = item
                 )
             }
-
         }
     }
 }

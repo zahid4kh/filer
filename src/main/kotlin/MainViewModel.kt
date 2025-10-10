@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
+import kotlin.collections.filter
 
 class MainViewModel(
     private val database: Database,
@@ -85,6 +86,24 @@ class MainViewModel(
 
     }
 
+    fun handleDotFilesVisibility(){
+        viewModelScope.launch {
+            val filteredDotFiles = _uiState.value.files.filter { string ->
+                !File(string).name.startsWith(".")
+            }
+            val files = if(_uiState.value.showDotFiles) _uiState.value.files else filteredDotFiles
+
+            withContext(Dispatchers.Main){
+                _uiState.update {
+                    it.copy(
+                        showDotFiles = !it.showDotFiles,
+                        files = files
+                    )
+                }
+            }
+        }
+    }
+
     fun toggleDarkMode() {
         val newDarkMode = !_uiState.value.darkMode
         _uiState.value = _uiState.value.copy(darkMode = newDarkMode)
@@ -98,6 +117,7 @@ class MainViewModel(
     data class UiState(
         val darkMode: Boolean = false,
         val currentPath: String = "",
-        val files: List<String> = mutableListOf()
+        val files: List<String> = mutableListOf(),
+        val showDotFiles: Boolean = false
     )
 }

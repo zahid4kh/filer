@@ -7,7 +7,7 @@ koin = "4.0.3"
 hotReload = "1.0.0-rc01"
 kotlinxDatetime = "0.6.2"
 slf4j = "2.0.12"
-deskit = "1.2.0"
+deskit = "1.4.0"
 lifecycleViewmodelCompose = "2.9.4"
 
 [libraries]

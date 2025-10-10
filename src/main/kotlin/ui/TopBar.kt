@@ -95,7 +95,7 @@ fun TopBarIcon(
     icon: @Composable () -> Unit
 ){
     TooltipBox(
-        positionProvider = TooltipDefaults.rememberPlainTooltipPositionProvider(),
+        positionProvider = TooltipDefaults.rememberTooltipPositionProvider(),
         tooltip = {
             PlainTooltip { Text(tooltipText, style = MaterialTheme.typography.bodySmall) }
         },

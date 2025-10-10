@@ -13,7 +13,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Folder
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -39,7 +41,8 @@ import java.io.File
 @Composable
 fun FolderItem(
     viewModel: MainViewModel,
-    item: String
+    item: String,
+    onShowFileInfoDialog: (String) -> Unit
 ){
     val scope = rememberCoroutineScope()
     var count by remember { mutableStateOf(0) }
@@ -78,22 +81,33 @@ fun FolderItem(
             )
         }
 
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier
-                .padding(horizontal = 5.dp)
-                .clip(MaterialTheme.shapes.medium)
-                .background(MaterialTheme.colorScheme.tertiary)
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(6.dp),
+            verticalAlignment = Alignment.CenterVertically
         ){
-            Text(
-                text = count.toString(),
-                modifier = Modifier.padding(5.dp),
-                color = MaterialTheme.colorScheme.onTertiary
-            )
+            IconButton(
+                onClick = { onShowFileInfoDialog(item) }
+            ){
+                Icon(
+                    imageVector = Icons.Default.Info,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.surfaceTint
+                )
+            }
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .padding(horizontal = 5.dp)
+                    .clip(MaterialTheme.shapes.medium)
+                    .background(MaterialTheme.colorScheme.tertiaryContainer)
+            ){
+                Text(
+                    text = count.toString(),
+                    modifier = Modifier.padding(5.dp),
+                    color = MaterialTheme.colorScheme.onTertiaryContainer
+                )
+            }
         }
-
-
     }
-
 }
 

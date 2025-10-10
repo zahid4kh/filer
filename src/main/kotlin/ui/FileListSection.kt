@@ -16,6 +16,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.PointerIcon
@@ -25,6 +29,7 @@ import filer.resources.Res
 import filer.resources.eye
 import filer.resources.eye_off
 import org.jetbrains.compose.resources.painterResource
+import ui.components.FileInfoDialog
 import ui.components.FileItem
 import ui.components.FolderItem
 import java.io.File
@@ -36,6 +41,16 @@ fun FileListSection(
     uiState: MainViewModel.UiState,
     viewModel: MainViewModel
 ){
+    var selectedFileForInfo by remember { mutableStateOf<File?>(null) }
+
+    selectedFileForInfo?.let { file ->
+        FileInfoDialog(
+            file = file,
+            onClose = { selectedFileForInfo = null },
+            resizable = true
+        )
+    }
+
     LaunchedEffect(uiState.showDotFiles){
         println("Dot files are visible: ${uiState.showDotFiles}")
     }
@@ -67,12 +82,18 @@ fun FileListSection(
                 if(File(item).isDirectory){
                     FolderItem(
                         viewModel = viewModel,
-                        item = item
+                        item = item,
+                        onShowFileInfoDialog = {
+                            selectedFileForInfo = File(it)
+                        }
                     )
                 }else{
                     FileItem(
                         viewModel = viewModel,
-                        item = item
+                        item = item,
+                        onShowFileInfoDialog = {
+                            selectedFileForInfo = File(it)
+                        }
                     )
                 }
             }

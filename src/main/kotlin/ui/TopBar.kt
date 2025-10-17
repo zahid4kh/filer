@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.window.WindowDraggableArea
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -36,6 +37,7 @@ import androidx.compose.ui.window.WindowPlacement
 import androidx.compose.ui.window.WindowScope
 import androidx.compose.ui.window.WindowState
 import kotlinx.coroutines.delay
+import ui.components.PathSegments
 
 @Composable
 fun WindowScope.TopBar(
@@ -49,6 +51,10 @@ fun WindowScope.TopBar(
     LaunchedEffect(uiState.isTitleVisible){
         delay(1200)
         viewModel.hideTitle()
+    }
+
+    LaunchedEffect(uiState.currentPath){
+        viewModel.generatePathSegments()
     }
     WindowDraggableArea {
         Box(
@@ -65,6 +71,18 @@ fun WindowScope.TopBar(
                     text = "Filer",
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onBackground
+                )
+            }
+
+            AnimatedVisibility(
+                visible = !uiState.isTitleVisible,
+                modifier = Modifier.align(Alignment.CenterStart)
+            ){
+                PathSegments(
+                    pathSegments = uiState.pathSegments,
+                    onPathSelected = { viewModel.setCurrentPath(it.absolutePath) },
+                    scrollState = rememberScrollState(),
+                    modifier = Modifier
                 )
             }
 

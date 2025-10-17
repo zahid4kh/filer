@@ -28,6 +28,7 @@ class MainViewModel(
             )
 
             initializeHomeScreen()
+            generatePathSegments()
         }
     }
 
@@ -108,6 +109,14 @@ class MainViewModel(
         _uiState.update { it.copy(isTitleVisible = false) }
     }
 
+    fun generatePathSegments(){
+        val pathSegments = generateSequence(File(_uiState.value.currentPath)) { it.parentFile }
+            .toList()
+            .asReversed()
+
+        _uiState.update { it.copy(pathSegments = pathSegments) }
+    }
+
     fun toggleDarkMode() {
         val newDarkMode = !_uiState.value.darkMode
         _uiState.value = _uiState.value.copy(darkMode = newDarkMode)
@@ -123,6 +132,7 @@ class MainViewModel(
         val currentPath: String = "",
         val files: List<String> = mutableListOf(),
         val showDotFiles: Boolean = false,
-        val isTitleVisible: Boolean = true
+        val isTitleVisible: Boolean = true,
+        val pathSegments: List<File> = emptyList()
     )
 }

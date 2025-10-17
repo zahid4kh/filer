@@ -51,7 +51,9 @@ fun main() = application {
                             WindowPlacement.Maximized
                     },
                     onCloseApplication = { exitApplication() },
-                    windowState = windowState
+                    windowState = windowState,
+                    uiState = uiState,
+                    viewModel = viewModel
                 )
 
                 App(

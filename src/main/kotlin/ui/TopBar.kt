@@ -1,10 +1,20 @@
 package ui
 
+import MainViewModel
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.window.WindowDraggableArea
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -12,6 +22,11 @@ import androidx.compose.material.icons.filled.CropSquare
 import androidx.compose.material.icons.filled.Minimize
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.PointerIcon
@@ -20,26 +35,39 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.WindowPlacement
 import androidx.compose.ui.window.WindowScope
 import androidx.compose.ui.window.WindowState
+import kotlinx.coroutines.delay
 
 @Composable
 fun WindowScope.TopBar(
     onMinimizeWindow: () -> Unit,
     onCloseApplication: () -> Unit,
     onHandleWindowSize: () -> Unit,
-    windowState: WindowState
+    windowState: WindowState,
+    uiState: MainViewModel.UiState,
+    viewModel: MainViewModel
 ){
+    LaunchedEffect(uiState.isTitleVisible){
+        delay(1200)
+        viewModel.hideTitle()
+    }
     WindowDraggableArea {
         Box(
            modifier = Modifier
                .fillMaxWidth()
                .background(MaterialTheme.colorScheme.background)
         ){
-            Text(
-                text = "Filer",
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.onBackground,
+            AnimatedVisibility(
+                visible = uiState.isTitleVisible,
+                exit = slideOutHorizontally(targetOffsetX = { -450 }, animationSpec = tween(800)) + fadeOut(animationSpec = tween(800)),
                 modifier = Modifier.align(Alignment.Center)
-            )
+            ){
+                Text(
+                    text = "Filer",
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+            }
+
             Row(
                 modifier = Modifier
                     .align(Alignment.CenterEnd),

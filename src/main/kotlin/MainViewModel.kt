@@ -104,6 +104,10 @@ class MainViewModel(
         }
     }
 
+    fun hideTitle(){
+        _uiState.update { it.copy(isTitleVisible = false) }
+    }
+
     fun toggleDarkMode() {
         val newDarkMode = !_uiState.value.darkMode
         _uiState.value = _uiState.value.copy(darkMode = newDarkMode)
@@ -118,6 +122,7 @@ class MainViewModel(
         val darkMode: Boolean = false,
         val currentPath: String = "",
         val files: List<String> = mutableListOf(),
-        val showDotFiles: Boolean = false
+        val showDotFiles: Boolean = false,
+        val isTitleVisible: Boolean = true
     )
 }

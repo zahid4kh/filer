@@ -15,7 +15,6 @@ import androidx.compose.foundation.rememberScrollbarAdapter
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -51,9 +50,6 @@ fun FileListSection(
         )
     }
 
-    LaunchedEffect(uiState.showDotFiles){
-        println("Dot files are visible: ${uiState.showDotFiles}")
-    }
     Row(
         modifier = Modifier.fillMaxSize()
     ){
@@ -106,5 +102,4 @@ fun FileListSection(
                 .pointerHoverIcon(PointerIcon.Hand)
         )
     }
-
 }

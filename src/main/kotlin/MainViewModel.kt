@@ -25,6 +25,7 @@ class MainViewModel(
             val settings = database.getSettings()
             _uiState.value = _uiState.value.copy(
                 darkMode = settings.darkMode,
+                showDotFiles = settings.showDotFiles
             )
 
             initializeHomeScreen()
@@ -68,40 +69,59 @@ class MainViewModel(
     }
 
     private fun updateListOfFiles(){
-        _uiState.update { it.copy(
-            files = File(_uiState.value.currentPath).listFiles().map { file ->
+        viewModelScope.launch(Dispatchers.IO) {
+            val allFiles = File(_uiState.value.currentPath).listFiles()?.map { file ->
                 file.absolutePath
+            } ?: emptyList()
+
+            val filteredFiles = if (_uiState.value.showDotFiles) {
+                allFiles
+            } else {
+                allFiles.filter { path ->
+                    !File(path).name.startsWith(".")
+                }
             }
-        ) }
+
+            withContext(Dispatchers.Main) {
+                _uiState.update { it.copy(files = filteredFiles) }
+            }
+        }
     }
 
     private suspend fun initializeHomeScreen(){
-        val homeFiles = homeDir.listFiles().map { file ->
-            file.absolutePath
-        }
-        withContext(Dispatchers.Main){
-            _uiState.update {
-                it.copy(currentPath = homeDir.absolutePath, files = homeFiles)
+        withContext(Dispatchers.IO) {
+            val allFiles = homeDir.listFiles()?.map { file ->
+                file.absolutePath
+            } ?: emptyList()
+
+            val filteredFiles = if (_uiState.value.showDotFiles) {
+                allFiles
+            } else {
+                allFiles.filter { path ->
+                    !File(path).name.startsWith(".")
+                }
+            }
+
+            withContext(Dispatchers.Main) {
+                _uiState.update {
+                    it.copy(currentPath = homeDir.absolutePath, files = filteredFiles)
+                }
             }
         }
-
     }
 
     fun handleDotFilesVisibility(){
-        viewModelScope.launch {
-            val filteredDotFiles = _uiState.value.files.filter { string ->
-                !File(string).name.startsWith(".")
-            }
-            val files = if(_uiState.value.showDotFiles) _uiState.value.files else filteredDotFiles
+        viewModelScope.launch(Dispatchers.IO) {
+            val newShowDotFiles = !_uiState.value.showDotFiles
 
             withContext(Dispatchers.Main){
-                _uiState.update {
-                    it.copy(
-                        showDotFiles = !it.showDotFiles,
-                        files = files
-                    )
-                }
+                _uiState.update { it.copy(showDotFiles = newShowDotFiles) }
             }
+
+            val settings = database.getSettings()
+            database.saveSettings(settings.copy(showDotFiles = newShowDotFiles))
+
+            updateListOfFiles()
         }
     }
 

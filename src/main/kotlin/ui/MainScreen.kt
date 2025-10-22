@@ -16,13 +16,8 @@ fun MainScreen(
 ){
     val listState = rememberLazyListState()
     Column(
-        modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(10.dp)
+        modifier = modifier
     ){
-        SortTypeButtons(
-            modifier = Modifier
-        )
-
         FileListSection(
             listState = listState,
             viewModel = viewModel,

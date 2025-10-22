@@ -1,7 +1,9 @@
 package ui
 
 import MainViewModel
+import androidx.compose.foundation.LocalScrollbarStyle
 import androidx.compose.foundation.VerticalScrollbar
+import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.layout.Arrangement
@@ -15,12 +17,14 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollbarAdapter
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.unit.dp
@@ -51,12 +55,18 @@ fun FileListSection(
     }
 
     Row(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.primaryContainer)
     ){
         LazyColumn(
             state = listState,
             verticalArrangement = Arrangement.spacedBy(3.dp),
-            modifier = Modifier.padding(start = 5.dp, end = 5.dp).weight(1f)
+            modifier = Modifier
+                .padding(5.dp)
+                .clip(MaterialTheme.shapes.medium)
+                .background(MaterialTheme.colorScheme.surface)
+                .weight(1f)
         ){
             item{
                 Row(
@@ -103,8 +113,12 @@ fun FileListSection(
         VerticalScrollbar(
             adapter = rememberScrollbarAdapter(listState),
             modifier = Modifier
-                .padding(horizontal = 6.dp)
-                .pointerHoverIcon(PointerIcon.Hand)
+                .padding(5.dp)
+                .pointerHoverIcon(PointerIcon.Hand),
+            style = LocalScrollbarStyle.current.copy(
+                hoverColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                unhoverColor = MaterialTheme.colorScheme.onPrimary
+            )
         )
     }
 }

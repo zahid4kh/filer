@@ -40,7 +40,7 @@ fun NavigationSection(
             modifier = Modifier
                 .matchParentSize()
                 .padding(5.dp)
-                .clip(MaterialTheme.shapes.small)
+                .clip(MaterialTheme.shapes.medium)
                 .background(MaterialTheme.colorScheme.tertiary),
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {

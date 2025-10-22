@@ -1,6 +1,7 @@
 package ui.components
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.clickable
@@ -46,6 +47,7 @@ fun FileItem(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
+            .padding(horizontal = 5.dp)
             .clip(MaterialTheme.shapes.medium)
             .clickable{ onOpenFile() }
             .pointerHoverIcon(PointerIcon.Hand)
@@ -68,8 +70,9 @@ fun FileItem(
             Text(
                 text = File(item).name,
                 style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.fillMaxWidth(),
-                overflow = TextOverflow.Ellipsis
+                modifier = Modifier.fillMaxWidth().animateContentSize(),
+                overflow = TextOverflow.Ellipsis,
+                softWrap = false
             )
         }
 

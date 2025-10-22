@@ -1,6 +1,7 @@
 package ui.components
 
 import MainViewModel
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -55,6 +56,7 @@ fun FolderItem(
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .padding(horizontal = 5.dp)
             .clip(MaterialTheme.shapes.small)
             .clickable(
                 onClick = { viewModel.setCurrentPath(dir = item) }
@@ -76,8 +78,9 @@ fun FolderItem(
             Text(
                 text = File(item).name,
                 style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.fillMaxWidth(),
-                overflow = TextOverflow.Ellipsis
+                modifier = Modifier.fillMaxWidth().animateContentSize(),
+                overflow = TextOverflow.Ellipsis,
+                softWrap = false
             )
         }
 

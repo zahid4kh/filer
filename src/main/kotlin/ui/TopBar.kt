@@ -6,6 +6,9 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.background
+import androidx.compose.foundation.hoverable
+import androidx.compose.foundation.indication
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,6 +21,7 @@ import androidx.compose.material.icons.filled.Minimize
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.PointerIcon
@@ -38,6 +42,10 @@ fun WindowScope.TopBar(
     uiState: MainViewModel.UiState,
     viewModel: MainViewModel
 ){
+    val minimizeIconInteractionSource = remember { MutableInteractionSource() }
+    val maximizeIconInteractionSource = remember { MutableInteractionSource() }
+    val closeIconInteractionSource = remember { MutableInteractionSource() }
+
     LaunchedEffect(uiState.isTitleVisible){
         delay(1200)
         viewModel.hideTitle()
@@ -90,7 +98,8 @@ fun WindowScope.TopBar(
                             tint = MaterialTheme.colorScheme.onBackground,
                             contentDescription = null
                         )
-                    }
+                    },
+                    interactionSource = minimizeIconInteractionSource
                 )
 
                 TopBarIcon(
@@ -102,7 +111,8 @@ fun WindowScope.TopBar(
                             tint = MaterialTheme.colorScheme.onBackground,
                             contentDescription = null
                         )
-                    }
+                    },
+                    interactionSource = maximizeIconInteractionSource
                 )
 
                 TopBarIcon(
@@ -114,7 +124,8 @@ fun WindowScope.TopBar(
                             tint = MaterialTheme.colorScheme.onBackground,
                             contentDescription = null
                         )
-                    }
+                    },
+                    interactionSource = closeIconInteractionSource
                 )
             }
         }
@@ -127,7 +138,8 @@ fun WindowScope.TopBar(
 fun TopBarIcon(
     onClick: () -> Unit,
     tooltipText: String,
-    icon: @Composable () -> Unit
+    icon: @Composable () -> Unit,
+    interactionSource: MutableInteractionSource
 ){
     TooltipBox(
         positionProvider = TooltipDefaults.rememberTooltipPositionProvider(TooltipAnchorPosition.Below),
@@ -138,7 +150,16 @@ fun TopBarIcon(
     ){
         IconButton(
             onClick = { onClick() },
-            modifier = Modifier.pointerHoverIcon(PointerIcon.Hand)
+            modifier = Modifier
+                .pointerHoverIcon(PointerIcon.Hand)
+                .hoverable(interactionSource)
+                .indication(
+                    interactionSource = interactionSource,
+                    indication = ripple(
+                        color = MaterialTheme.colorScheme.tertiary,
+                        radius = 20.dp
+                    )
+                )
         ){
             icon()
         }

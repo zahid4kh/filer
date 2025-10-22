@@ -3,6 +3,7 @@ package ui
 import MainViewModel
 import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -83,12 +84,17 @@ fun FileListSection(
                         }
                     )
                 }else{
+                    val fileInteractionSource = remember { MutableInteractionSource() }
+                    val isFileHovered by fileInteractionSource.collectIsHoveredAsState()
                     FileItem(
                         item = item,
                         onShowFileInfoDialog = {
                             selectedFileForInfo = File(it)
                         },
-                        onOpenFile = { viewModel.openFile(item) }
+                        onOpenFile = { viewModel.openFile(item) },
+                        onDeleteFile = {  },
+                        interactionSource = fileInteractionSource,
+                        isHovered = isFileHovered
                     )
                 }
             }

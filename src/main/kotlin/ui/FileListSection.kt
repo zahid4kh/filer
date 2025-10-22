@@ -92,7 +92,7 @@ fun FileListSection(
                             selectedFileForInfo = File(it)
                         },
                         onOpenFile = { viewModel.openFile(item) },
-                        onDeleteFile = {  },
+                        onDeleteFile = { viewModel.deleteFile(item) },
                         interactionSource = fileInteractionSource,
                         isHovered = isFileHovered
                     )

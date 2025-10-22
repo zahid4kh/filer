@@ -4,6 +4,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
+import androidx.compose.material3.TooltipAnchorPosition
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -184,7 +185,7 @@ internal fun InfoRow(
         )
         if(isLocationLabel && value.length > 20){
             TooltipBox(
-                positionProvider = TooltipDefaults.rememberTooltipPositionProvider(),
+                positionProvider = TooltipDefaults.rememberTooltipPositionProvider(TooltipAnchorPosition.Above),
                 state = rememberTooltipState(),
                 tooltip = {
                     PlainTooltip {

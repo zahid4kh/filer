@@ -1,6 +1,11 @@
 package ui.components
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.hoverable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -8,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.RestoreFromTrash
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -22,6 +28,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import filer.resources.Res
 import filer.resources.document
+import filer.resources.trash
 import org.jetbrains.compose.resources.painterResource
 import java.io.File
 
@@ -29,7 +36,10 @@ import java.io.File
 fun FileItem(
     item: String,
     onShowFileInfoDialog: (String) -> Unit,
-    onOpenFile: () -> Unit
+    onOpenFile: () -> Unit,
+    onDeleteFile: () -> Unit,
+    interactionSource: MutableInteractionSource,
+    isHovered: Boolean
 ){
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -39,6 +49,7 @@ fun FileItem(
             .clip(MaterialTheme.shapes.medium)
             .clickable{ onOpenFile() }
             .pointerHoverIcon(PointerIcon.Hand)
+            .hoverable(interactionSource)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -62,15 +73,39 @@ fun FileItem(
             )
         }
 
-        IconButton(
-            onClick = { onShowFileInfoDialog(item) }
-        ){
-            Icon(
-                imageVector = Icons.Default.Info,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.surfaceTint
-            )
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(5.dp)
+        ) {
+            AnimatedVisibility(
+                visible = isHovered,
+                enter = scaleIn(),
+                exit = scaleOut()
+            ){
+                IconButton(
+                    onClick = { onDeleteFile() }
+                ){
+                    Icon(
+                        painter = painterResource(Res.drawable.trash),
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.error,
+                        modifier = Modifier.size(24.dp)
+                    )
+                }
+            }
+
+
+            IconButton(
+                onClick = { onShowFileInfoDialog(item) }
+            ){
+                Icon(
+                    imageVector = Icons.Default.Info,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.surfaceTint
+                )
+            }
         }
+
 
     }
 }

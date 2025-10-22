@@ -10,6 +10,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.awt.Desktop
 import java.io.File
+import java.io.IOException
 import kotlin.collections.filter
 
 class MainViewModel(
@@ -139,9 +140,25 @@ class MainViewModel(
     }
 
     fun openFile(file: String){
-        val fileToOpen = File(file)
-        val desktop = Desktop.getDesktop()
-        desktop.open(fileToOpen)
+        viewModelScope.launch(Dispatchers.IO) {
+            val fileToOpen = File(file)
+            val desktop = Desktop.getDesktop()
+            desktop.open(fileToOpen)
+        }
+    }
+
+    fun deleteFile(file: String){
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val fileToDelete = File(file)
+                fileToDelete.delete()
+            }catch (e: IOException){
+                println("File '$file' was not deleted")
+                e.printStackTrace()
+            }
+
+            updateListOfFiles()
+        }
     }
 
     fun toggleDarkMode() {

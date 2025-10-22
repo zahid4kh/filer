@@ -1,20 +1,14 @@
 package ui
 
 import MainViewModel
-import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.window.WindowDraggableArea
 import androidx.compose.material.icons.Icons
@@ -24,10 +18,6 @@ import androidx.compose.material.icons.filled.Minimize
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.PointerIcon
@@ -57,7 +47,7 @@ fun WindowScope.TopBar(
         viewModel.generatePathSegments()
     }
     WindowDraggableArea {
-        Box(
+        Row(
            modifier = Modifier
                .fillMaxWidth()
                .background(MaterialTheme.colorScheme.background)
@@ -65,7 +55,7 @@ fun WindowScope.TopBar(
             AnimatedVisibility(
                 visible = uiState.isTitleVisible,
                 exit = slideOutHorizontally(targetOffsetX = { -450 }, animationSpec = tween(800)) + fadeOut(animationSpec = tween(800)),
-                modifier = Modifier.align(Alignment.Center)
+                modifier = Modifier
             ){
                 Text(
                     text = "Filer",
@@ -76,7 +66,7 @@ fun WindowScope.TopBar(
 
             AnimatedVisibility(
                 visible = !uiState.isTitleVisible,
-                modifier = Modifier.align(Alignment.CenterStart)
+                modifier = Modifier.weight(1f)
             ){
                 PathSegments(
                     pathSegments = uiState.pathSegments,
@@ -87,8 +77,7 @@ fun WindowScope.TopBar(
             }
 
             Row(
-                modifier = Modifier
-                    .align(Alignment.CenterEnd),
+                modifier = Modifier,
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(5.dp)
             ){

@@ -2,7 +2,6 @@ package ui.components
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -13,6 +12,7 @@ import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import theme.getJetbrainsMonoFamily
 import java.io.File
 
 
@@ -32,7 +32,7 @@ internal fun PathSegments(
             horizontalArrangement = Arrangement.spacedBy(4.dp),
             modifier = Modifier
                 .horizontalScroll(scrollState)
-                .padding(bottom = 8.dp, end = 12.dp)
+                .padding(bottom = 10.dp, end = 12.dp, top = 4.dp, start = 3.dp)
         ) {
             pathSegments.forEachIndexed { index, dir ->
                 Text(
@@ -40,18 +40,21 @@ internal fun PathSegments(
                     color = if (index == pathSegments.lastIndex)
                         MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground,
                     modifier = Modifier
-                        .clip(MaterialTheme.shapes.medium)
+                        .clip(MaterialTheme.shapes.small)
+                        .background(MaterialTheme.colorScheme.tertiaryContainer)
                         .clickable { onPathSelected(dir) }
-                        .padding(8.dp)
+                        .padding(6.dp)
                         .pointerHoverIcon(PointerIcon.Hand),
                     style = MaterialTheme.typography.labelLarge,
-                    fontWeight = FontWeight.Bold
+                    fontFamily = getJetbrainsMonoFamily(),
+                    fontWeight = FontWeight.Bold,
                 )
                 if (index != pathSegments.lastIndex) {
                     Text(
                         text = "/",
                         style = MaterialTheme.typography.labelLarge,
                         fontWeight = FontWeight.Bold,
+                        fontFamily = getJetbrainsMonoFamily(),
                         color = MaterialTheme.colorScheme.onBackground
                     )
                 }

@@ -31,6 +31,7 @@ import androidx.compose.ui.window.WindowPlacement
 import androidx.compose.ui.window.WindowScope
 import androidx.compose.ui.window.WindowState
 import kotlinx.coroutines.delay
+import ui.components.AnimatedSettingsIcon
 import ui.components.PathSegments
 
 @Composable
@@ -45,6 +46,7 @@ fun WindowScope.TopBar(
     val minimizeIconInteractionSource = remember { MutableInteractionSource() }
     val maximizeIconInteractionSource = remember { MutableInteractionSource() }
     val closeIconInteractionSource = remember { MutableInteractionSource() }
+    val settingsIconInteractionSource = remember { MutableInteractionSource() }
 
     LaunchedEffect(uiState.isTitleVisible){
         delay(1200)
@@ -89,6 +91,13 @@ fun WindowScope.TopBar(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(5.dp)
             ){
+                TopBarIcon(
+                    onClick = {  },
+                    tooltipText = "Settings",
+                    icon = { AnimatedSettingsIcon() },
+                    interactionSource = settingsIconInteractionSource
+                )
+
                 TopBarIcon(
                     onClick = { onMinimizeWindow() },
                     tooltipText = "Minimize",

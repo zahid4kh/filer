@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.awt.Desktop
 import java.io.File
 import kotlin.collections.filter
 
@@ -135,6 +136,12 @@ class MainViewModel(
             .asReversed()
 
         _uiState.update { it.copy(pathSegments = pathSegments) }
+    }
+
+    fun openFile(file: String){
+        val fileToOpen = File(file)
+        val desktop = Desktop.getDesktop()
+        desktop.open(fileToOpen)
     }
 
     fun toggleDarkMode() {

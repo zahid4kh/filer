@@ -13,15 +13,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
+import androidx.compose.ui.layout.ModifierLocalBeyondBoundsLayout
 import androidx.compose.ui.unit.dp
 
 @Composable
 fun NavigationSection(
     uiState: MainViewModel.UiState,
-    modifier: Modifier,
     onNavigateToHome: () -> Unit,
     onNavigateToDownloads: () -> Unit,
     onNavigateToDocuments: () -> Unit,
@@ -29,78 +30,96 @@ fun NavigationSection(
     onNavigateToVideos: () -> Unit,
     onNavigateToMusic: () -> Unit
 ){
-    Column(
-        modifier = modifier
+    Box(
+        modifier = Modifier
             .fillMaxHeight()
+            .width(200.dp)
             .background(MaterialTheme.colorScheme.tertiaryContainer)
-            .padding(horizontal = 5.dp, vertical = 5.dp),
-        verticalArrangement = Arrangement.spacedBy(10.dp)
-    ) {
-        NavItem(
-            title = "Home",
-            icon = Icons.Default.Home,
-            onNavigateToPath = { onNavigateToHome() }
-        )
+    ){
+        Column(
+            modifier = Modifier
+                .matchParentSize()
+                .padding(5.dp)
+                .clip(MaterialTheme.shapes.small)
+                .background(MaterialTheme.colorScheme.tertiary),
+            verticalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            NavItem(
+                title = "Home",
+                icon = Icons.Default.Home,
+                onNavigateToPath = { onNavigateToHome() },
+                modifier = Modifier
+                    .padding(horizontal = 5.dp)
+                    .padding(top = 10.dp)
+            )
 
-        NavItem(
-            title = "Downloads",
-            icon = Icons.Default.Download,
-            onNavigateToPath = { onNavigateToDownloads() }
-        )
+            NavItem(
+                title = "Downloads",
+                icon = Icons.Default.Download,
+                onNavigateToPath = { onNavigateToDownloads() },
+                modifier = Modifier.padding(horizontal = 5.dp)
+            )
 
-        NavItem(
-            title = "Documents",
-            icon = Icons.Default.FileOpen,
-            onNavigateToPath = { onNavigateToDocuments() }
-        )
+            NavItem(
+                title = "Documents",
+                icon = Icons.Default.FileOpen,
+                onNavigateToPath = { onNavigateToDocuments() },
+                modifier = Modifier.padding(horizontal = 5.dp)
+            )
 
-        NavItem(
-            title = "Music",
-            icon = Icons.Default.MusicNote,
-            onNavigateToPath = { onNavigateToMusic() }
-        )
+            NavItem(
+                title = "Music",
+                icon = Icons.Default.MusicNote,
+                onNavigateToPath = { onNavigateToMusic() },
+                modifier = Modifier.padding(horizontal = 5.dp)
+            )
 
-        NavItem(
-            title = "Videos",
-            icon = Icons.Default.VideoFile,
-            onNavigateToPath = { onNavigateToVideos() }
-        )
+            NavItem(
+                title = "Videos",
+                icon = Icons.Default.VideoFile,
+                onNavigateToPath = { onNavigateToVideos() },
+                modifier = Modifier.padding(horizontal = 5.dp)
+            )
 
-        NavItem(
-            title = "Pictures",
-            icon = Icons.Default.Image,
-            onNavigateToPath = { onNavigateToPictures() }
-        )
+            NavItem(
+                title = "Pictures",
+                icon = Icons.Default.Image,
+                onNavigateToPath = { onNavigateToPictures() },
+                modifier = Modifier.padding(horizontal = 5.dp)
+            )
+        }
     }
+
 }
 
 @Composable
 fun NavItem(
     title: String,
     icon: ImageVector,
-    onNavigateToPath: () -> Unit
+    onNavigateToPath: () -> Unit,
+    modifier: Modifier
 ){
     Row(
         horizontalArrangement = Arrangement.spacedBy(10.dp),
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .clip(MaterialTheme.shapes.medium)
             .clickable(onClick = { onNavigateToPath() })
-            .background(MaterialTheme.colorScheme.tertiary)
+            .background(MaterialTheme.colorScheme.secondary)
             .padding(5.dp)
             .pointerHoverIcon(PointerIcon.Hand)
     ) {
         Icon(
             imageVector = icon,
             contentDescription = null,
-            tint = MaterialTheme.colorScheme.onTertiary
+            tint = MaterialTheme.colorScheme.onSecondary
         )
 
         Text(
             text = title,
             style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme.colorScheme.onTertiary
+            color = MaterialTheme.colorScheme.onSecondary
         )
     }
 }

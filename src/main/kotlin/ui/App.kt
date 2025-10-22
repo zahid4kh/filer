@@ -21,7 +21,6 @@ fun App(
         ) {
             NavigationSection(
                 uiState = uiState,
-                modifier = Modifier.weight(0.2f),
                 onNavigateToHome = { viewModel.navigateToHome() },
                 onNavigateToMusic = { viewModel.navigateToMusic() },
                 onNavigateToVideos = { viewModel.navigateToVideos() },

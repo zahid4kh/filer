@@ -68,22 +68,6 @@ fun FileListSection(
                 .background(MaterialTheme.colorScheme.surface)
                 .weight(1f)
         ){
-            item{
-                Row(
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    IconButton(
-                        onClick = { viewModel.handleDotFilesVisibility() },
-                        modifier = Modifier
-                            .pointerHoverIcon(PointerIcon.Hand)
-                    ){
-                        Icon(
-                            painter = if(uiState.showDotFiles) painterResource(Res.drawable.eye) else painterResource(Res.drawable.eye_off),
-                            contentDescription = null
-                        )
-                    }
-                }
-            }
             items(items = uiState.files.sorted()){ item ->
                 if(File(item).isDirectory){
                     FolderItem(

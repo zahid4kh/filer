@@ -1,6 +1,10 @@
 package ui
 
 import MainViewModel
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.LocalScrollbarStyle
 import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.background
@@ -18,8 +22,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
+import androidx.compose.ui.layout.onFirstVisible
 import androidx.compose.ui.unit.dp
 import ui.components.FileInfoDialog
 import ui.components.FileItem
@@ -27,6 +33,7 @@ import ui.components.FolderItem
 import java.io.File
 
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun FileListSection(
     listState: LazyListState,
@@ -55,20 +62,35 @@ fun FileListSection(
                 .padding(5.dp)
                 .clip(MaterialTheme.shapes.medium)
                 .background(MaterialTheme.colorScheme.surface)
+                .animateContentSize()
                 .weight(1f)
         ){
             items(items = uiState.files.sorted()){ item ->
                 if(File(item).isDirectory){
+                    var isFolderVisible by remember { mutableStateOf(false)}
+                    val scale by animateFloatAsState(
+                        targetValue = if(isFolderVisible) 1f else 0f,
+                    )
                     FolderItem(
                         viewModel = viewModel,
                         item = item,
                         onShowFileInfoDialog = {
                             selectedFileForInfo = File(it)
-                        }
+                        },
+                        modifier = Modifier
+                            .onFirstVisible{ isFolderVisible = !isFolderVisible }
+                            .scale(scale)
+                            .animateItem(placementSpec = spring())
                     )
+
+
                 }else{
                     val fileInteractionSource = remember { MutableInteractionSource() }
                     val isFileHovered by fileInteractionSource.collectIsHoveredAsState()
+                    var isFileVisible by remember { mutableStateOf(false) }
+                    val scale by animateFloatAsState(
+                        targetValue = if(isFileVisible) 1f else 0f,
+                    )
                     FileItem(
                         item = item,
                         isChecked = uiState.selectedFiles.contains(item),
@@ -79,7 +101,11 @@ fun FileListSection(
                         onOpenFile = { viewModel.openFile(item) },
                         onDeleteFile = { viewModel.deleteFile(item) },
                         interactionSource = fileInteractionSource,
-                        isHovered = isFileHovered
+                        isHovered = isFileHovered,
+                        modifier = Modifier
+                            .onFirstVisible{ isFileVisible = !isFileVisible }
+                            .scale(scale)
+                            .animateItem(placementSpec = spring())
                     )
                 }
             }

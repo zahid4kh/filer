@@ -37,13 +37,14 @@ fun FileItem(
     onOpenFile: () -> Unit,
     onDeleteFile: () -> Unit,
     interactionSource: MutableInteractionSource,
-    isHovered: Boolean
+    isHovered: Boolean,
+    modifier: Modifier
 ){
     val deleteIconInteractionSource = remember { MutableInteractionSource() }
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 5.dp)
             .clip(MaterialTheme.shapes.medium)

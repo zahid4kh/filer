@@ -7,18 +7,11 @@ import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.hoverable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.RestoreFromTrash
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -36,6 +29,8 @@ import java.io.File
 @Composable
 fun FileItem(
     item: String,
+    isChecked: Boolean,
+    onCheckedChange: (Boolean) -> Unit,
     onShowFileInfoDialog: (String) -> Unit,
     onOpenFile: () -> Unit,
     onDeleteFile: () -> Unit,
@@ -79,8 +74,7 @@ fun FileItem(
         }
 
         Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(5.dp)
+            verticalAlignment = Alignment.CenterVertically
         ) {
             AnimatedVisibility(
                 visible = isHovered,
@@ -91,7 +85,7 @@ fun FileItem(
                     onClick = { onDeleteFile() }
                 ){
                     Icon(
-                        painter = painterResource(Res.drawable.trash),
+                        imageVector = Icons.Default.DeleteForever,
                         contentDescription = null,
                         tint = MaterialTheme.colorScheme.error,
                         modifier = Modifier.size(24.dp)
@@ -99,6 +93,10 @@ fun FileItem(
                 }
             }
 
+            Checkbox(
+                checked = isChecked,
+                onCheckedChange = onCheckedChange
+            )
 
             IconButton(
                 onClick = { onShowFileInfoDialog(item) }

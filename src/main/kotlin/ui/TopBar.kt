@@ -2,9 +2,8 @@ package ui
 
 import MainViewModel
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.hoverable
 import androidx.compose.foundation.indication
@@ -18,11 +17,10 @@ import androidx.compose.foundation.window.WindowDraggableArea
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.CropSquare
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Minimize
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.PointerIcon
@@ -32,7 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.WindowPlacement
 import androidx.compose.ui.window.WindowScope
 import androidx.compose.ui.window.WindowState
-import kotlinx.coroutines.delay
+import deskit.dialogs.confirmation.ConfirmationDialog
 import ui.components.AnimatedSettingsIcon
 import ui.components.PathSegments
 import ui.components.SettingsDropdown
@@ -50,50 +48,66 @@ fun WindowScope.TopBar(
     val maximizeIconInteractionSource = remember { MutableInteractionSource() }
     val closeIconInteractionSource = remember { MutableInteractionSource() }
     val settingsIconInteractionSource = remember { MutableInteractionSource() }
-
-    LaunchedEffect(uiState.isTitleVisible){
-        delay(1200)
-        viewModel.hideTitle()
-    }
+    val deleteIconInteractionSource = remember { MutableInteractionSource() }
+    var showDeleteConfirmDialog by remember { mutableStateOf(false) }
 
     LaunchedEffect(uiState.currentPath){
         viewModel.generatePathSegments()
     }
+
+    if (showDeleteConfirmDialog) {
+        ConfirmationDialog(
+            width = 400.dp,
+            height = 200.dp,
+            title = "Delete Files",
+            message = "Are you sure you want to delete ${uiState.selectedFiles.size} selected file(s)?",
+            onConfirm = {
+                viewModel.deleteSelectedFiles()
+                showDeleteConfirmDialog = false
+            },
+            onCancel = {
+                showDeleteConfirmDialog = false
+            },
+            resizable = false
+        )
+    }
+
     WindowDraggableArea {
         Row(
            modifier = Modifier
                .fillMaxWidth()
                .background(MaterialTheme.colorScheme.background)
         ){
-            AnimatedVisibility(
-                visible = uiState.isTitleVisible,
-                exit = slideOutHorizontally(targetOffsetX = { -450 }, animationSpec = tween(800)) + fadeOut(animationSpec = tween(800)),
-                modifier = Modifier
-            ){
-                Text(
-                    text = "Filer",
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.onBackground
-                )
-            }
-
-            AnimatedVisibility(
-                visible = !uiState.isTitleVisible,
+            PathSegments(
+                pathSegments = uiState.pathSegments,
+                onPathSelected = { viewModel.setCurrentPath(it.absolutePath) },
+                scrollState = rememberScrollState(),
                 modifier = Modifier.weight(1f)
-            ){
-                PathSegments(
-                    pathSegments = uiState.pathSegments,
-                    onPathSelected = { viewModel.setCurrentPath(it.absolutePath) },
-                    scrollState = rememberScrollState(),
-                    modifier = Modifier
-                )
-            }
+            )
 
             Row(
                 modifier = Modifier,
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(5.dp)
             ){
+                AnimatedVisibility(
+                    visible = uiState.selectedFiles.isNotEmpty(),
+                    enter = scaleIn(), exit = scaleOut()
+                ) {
+                    TopBarIcon(
+                        onClick = { showDeleteConfirmDialog = true },
+                        tooltipText = "Delete selected files (${uiState.selectedFiles.size})",
+                        icon = {
+                            Icon(
+                                imageVector = Icons.Default.Delete,
+                                tint = MaterialTheme.colorScheme.error,
+                                contentDescription = null
+                            )
+                        },
+                        interactionSource = deleteIconInteractionSource
+                    )
+                }
+
                 Box {
                     TopBarIcon(
                         onClick = { viewModel.expandSettings() },

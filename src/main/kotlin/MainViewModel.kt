@@ -161,6 +161,38 @@ class MainViewModel(
         }
     }
 
+    fun toggleFileSelection(file: String) {
+        _uiState.update { state ->
+            val newSelection = if (state.selectedFiles.contains(file)) {
+                state.selectedFiles - file
+            } else {
+                state.selectedFiles + file
+            }
+            state.copy(selectedFiles = newSelection)
+        }
+    }
+
+    fun deleteSelectedFiles() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val filesToDelete = _uiState.value.selectedFiles
+
+            filesToDelete.forEach { filePath ->
+                try {
+                    File(filePath).delete()
+                } catch (e: IOException) {
+                    println("File '$filePath' was not deleted")
+                    e.printStackTrace()
+                }
+            }
+
+            withContext(Dispatchers.Main) {
+                _uiState.update { it.copy(selectedFiles = emptySet()) }
+            }
+
+            updateListOfFiles()
+        }
+    }
+
     fun expandSettings(){
         _uiState.update { it.copy(isSettingsExpanded = true) }
     }
@@ -186,6 +218,7 @@ class MainViewModel(
         val showDotFiles: Boolean = false,
         val isTitleVisible: Boolean = true,
         val pathSegments: List<File> = emptyList(),
-        val isSettingsExpanded: Boolean = false
+        val isSettingsExpanded: Boolean = false,
+        val selectedFiles: Set<String> = emptySet()
     )
 }

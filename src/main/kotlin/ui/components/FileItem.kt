@@ -62,6 +62,7 @@ fun FileItem(
             Icon(
                 painter = painterResource(Res.drawable.document),
                 contentDescription = null,
+                tint = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier
                     .size(33.dp)
                     .padding(horizontal = 5.dp, vertical = 1.dp)
@@ -72,7 +73,8 @@ fun FileItem(
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.fillMaxWidth().animateContentSize(),
                 overflow = TextOverflow.Ellipsis,
-                softWrap = false
+                softWrap = false,
+                color = MaterialTheme.colorScheme.onSurface
             )
         }
 

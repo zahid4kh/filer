@@ -72,6 +72,7 @@ fun FolderItem(
             Icon(
                 imageVector = Icons.Default.Folder,
                 contentDescription = null,
+                tint = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.padding(horizontal = 5.dp, vertical = 1.dp)
             )
 
@@ -80,7 +81,8 @@ fun FolderItem(
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.fillMaxWidth().animateContentSize(),
                 overflow = TextOverflow.Ellipsis,
-                softWrap = false
+                softWrap = false,
+                color = MaterialTheme.colorScheme.onSurface
             )
         }
 

@@ -40,7 +40,6 @@ fun FileItem(
     isHovered: Boolean,
     modifier: Modifier
 ){
-    val deleteIconInteractionSource = remember { MutableInteractionSource() }
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,

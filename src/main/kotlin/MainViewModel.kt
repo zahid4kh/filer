@@ -161,6 +161,14 @@ class MainViewModel(
         }
     }
 
+    fun expandSettings(){
+        _uiState.update { it.copy(isSettingsExpanded = true) }
+    }
+
+    fun collapseSettings(){
+        _uiState.update { it.copy(isSettingsExpanded = false) }
+    }
+
     fun toggleDarkMode() {
         val newDarkMode = !_uiState.value.darkMode
         _uiState.value = _uiState.value.copy(darkMode = newDarkMode)
@@ -177,6 +185,7 @@ class MainViewModel(
         val files: List<String> = mutableListOf(),
         val showDotFiles: Boolean = false,
         val isTitleVisible: Boolean = true,
-        val pathSegments: List<File> = emptyList()
+        val pathSegments: List<File> = emptyList(),
+        val isSettingsExpanded: Boolean = false
     )
 }

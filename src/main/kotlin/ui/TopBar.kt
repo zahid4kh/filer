@@ -10,6 +10,7 @@ import androidx.compose.foundation.hoverable
 import androidx.compose.foundation.indication
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.rememberScrollState
@@ -26,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.WindowPlacement
 import androidx.compose.ui.window.WindowScope
@@ -33,6 +35,7 @@ import androidx.compose.ui.window.WindowState
 import kotlinx.coroutines.delay
 import ui.components.AnimatedSettingsIcon
 import ui.components.PathSegments
+import ui.components.SettingsDropdown
 
 @Composable
 fun WindowScope.TopBar(
@@ -91,12 +94,24 @@ fun WindowScope.TopBar(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(5.dp)
             ){
-                TopBarIcon(
-                    onClick = {  },
-                    tooltipText = "Settings",
-                    icon = { AnimatedSettingsIcon() },
-                    interactionSource = settingsIconInteractionSource
-                )
+                Box {
+                    TopBarIcon(
+                        onClick = { viewModel.expandSettings() },
+                        tooltipText = "Settings",
+                        icon = { AnimatedSettingsIcon() },
+                        interactionSource = settingsIconInteractionSource
+                    )
+
+                    SettingsDropdown(
+                        isExpanded = uiState.isSettingsExpanded,
+                        onDismiss = { viewModel.collapseSettings() },
+                        offset = DpOffset(-(30).dp, 10.dp),
+                        uiState = uiState,
+                        onChangeTheme = { viewModel.toggleDarkMode() },
+                        onShowHiddenFiles = { viewModel.handleDotFilesVisibility() }
+                    )
+                }
+
 
                 TopBarIcon(
                     onClick = { onMinimizeWindow() },

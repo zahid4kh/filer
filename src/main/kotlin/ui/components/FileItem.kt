@@ -13,19 +13,21 @@ import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import filer.resources.Res
 import filer.resources.document
-import filer.resources.trash
 import org.jetbrains.compose.resources.painterResource
 import java.io.File
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FileItem(
     item: String,
@@ -37,6 +39,7 @@ fun FileItem(
     interactionSource: MutableInteractionSource,
     isHovered: Boolean
 ){
+    val deleteIconInteractionSource = remember { MutableInteractionSource() }
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
@@ -81,16 +84,34 @@ fun FileItem(
                 enter = scaleIn(),
                 exit = scaleOut()
             ){
-                IconButton(
-                    onClick = { onDeleteFile() }
+                TooltipBox(
+                    positionProvider = TooltipDefaults.rememberTooltipPositionProvider(TooltipAnchorPosition.Below),
+                    tooltip = {
+                        RichTooltip(
+                            title = { Text("Delete", fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleMedium) },
+                            colors = TooltipDefaults.richTooltipColors(
+                                containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                                contentColor = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        ) {
+                            Text("Immediately delete the file", style = MaterialTheme.typography.bodyMedium)
+                        }
+                    },
+                    state = rememberTooltipState()
                 ){
-                    Icon(
-                        imageVector = Icons.Default.DeleteForever,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.error,
-                        modifier = Modifier.size(24.dp)
-                    )
+                    IconButton(
+                        onClick = { onDeleteFile() }
+                    ){
+                        Icon(
+                            imageVector = Icons.Default.DeleteForever,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.error,
+                            modifier = Modifier
+                                .size(24.dp)
+                        )
+                    }
                 }
+
             }
 
             Checkbox(

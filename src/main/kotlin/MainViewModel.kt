@@ -1,3 +1,5 @@
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.toComposeImageBitmap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import data.Database
@@ -11,6 +13,7 @@ import kotlinx.coroutines.withContext
 import java.awt.Desktop
 import java.io.File
 import java.io.IOException
+import javax.imageio.ImageIO
 import kotlin.collections.filter
 
 class MainViewModel(
@@ -207,6 +210,32 @@ class MainViewModel(
         }
     }
 
+    fun previewImage(image: String){
+        val imageForPreview = File(image)
+
+        viewModelScope.launch(Dispatchers.IO) {
+            if(isImage(image)){
+                val image = ImageIO.read(imageForPreview).toComposeImageBitmap()
+                withContext(Dispatchers.Main){
+                    _uiState.update { it.copy(imageForPreview = image) }
+                }
+            }else {
+                _uiState.update { it.copy(imageForPreview = null) }
+                return@launch
+            }
+        }
+    }
+
+    fun isImage(file: String): Boolean{
+        val extensions = listOf("png", "jpeg", "jpg")
+        val isImage = extensions.contains(File(file).extension)
+        return isImage
+    }
+
+    fun resetImagePreview(){
+        _uiState.update { it.copy(imageForPreview = null) }
+    }
+
     data class UiState(
         val darkMode: Boolean = false,
         val currentPath: String = "",
@@ -215,6 +244,7 @@ class MainViewModel(
         val isTitleVisible: Boolean = true,
         val pathSegments: List<File> = emptyList(),
         val isSettingsExpanded: Boolean = false,
-        val selectedFiles: Set<String> = emptySet()
+        val selectedFiles: Set<String> = emptySet(),
+        val imageForPreview: ImageBitmap? = null
     )
 }

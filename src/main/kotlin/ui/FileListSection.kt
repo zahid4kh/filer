@@ -105,7 +105,9 @@ fun FileListSection(
                         modifier = Modifier
                             .onFirstVisible{ isFileVisible = !isFileVisible }
                             .scale(scale)
-                            .animateItem(placementSpec = spring())
+                            .animateItem(placementSpec = spring()),
+                        previewImage = uiState.imageForPreview,
+                        viewModel = viewModel
                     )
                 }
             }

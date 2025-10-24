@@ -127,10 +127,6 @@ class MainViewModel(
         }
     }
 
-    fun hideTitle(){
-        _uiState.update { it.copy(isTitleVisible = false) }
-    }
-
     fun generatePathSegments(){
         val pathSegments = generateSequence(File(_uiState.value.currentPath)) { it.parentFile }
             .toList()

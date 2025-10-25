@@ -1,15 +1,36 @@
 # Filer
 
-A desktop application built with Kotlin and Compose for Desktop.
+A modern file manager desktop application built with Kotlin and Compose for Desktop, featuring a clean Material 3 interface.
 
-[![Kotlin](https://img.shields.io/badge/Kotlin-2.1.20-blue.svg?logo=kotlin)](https://kotlinlang.org) [![Compose](https://img.shields.io/badge/Compose-1.8.0-blue.svg?logo=jetpack-compose)](https://www.jetbrains.com/lp/compose-multiplatform/)
+[![Kotlin](https://img.shields.io/badge/Kotlin-2.1.20-blue.svg?logo=kotlin)](https://kotlinlang.org) [![Compose](https://img.shields.io/badge/Compose-1.9.1-blue.svg?logo=jetpack-compose)](https://www.jetbrains.com/lp/compose-multiplatform/)
 
 ## Features
 
-- Modern UI with Material 3 design
-- Dark mode support
-- Cross-platform (Windows, macOS, Linux)
-- Hot reload support for faster development
+- **File Management**
+    - Browse files and folders with a clean interface
+    - Multi-file selection for batch operations
+    - Delete files
+    - Open files with default system applications
+    - View detailed file/folder information (size, type, modified date)
+
+- **Navigation**
+    - Quick access sidebar for common folders (Home, Downloads, Documents, Music, Videos, Pictures)
+    - Breadcrumb path navigation
+    - Folder content count display
+
+- **User Interface**
+    - Material 3 design system
+    - Dark and light theme support with persistent settings
+    - Custom window chrome with minimize/maximize/close controls
+    - Animated settings icon
+    - Image preview tooltips for image files (only `png`, `jpg`, `jpeg`)
+    - Smooth animations and transitions
+
+- **Settings**
+    - Toggle hidden files visibility
+    - Theme preference persistence
+    - Settings stored in `~/.filer/settings.json`
+
 
 ## Development Setup
 
@@ -21,13 +42,10 @@ A desktop application built with Kotlin and Compose for Desktop.
 
 ### Make Gradle Wrapper Executable (Linux/macOS only)
 
-After cloning the repository, you need to make the Gradle wrapper executable:
-
+After cloning the repository, make the Gradle wrapper executable:
 ```bash
 chmod +x gradlew
 ```
-
-**Note:** This step is not required on Windows as it uses `gradlew.bat`.
 
 ### Running the Application
 
@@ -41,28 +59,39 @@ chmod +x gradlew
 ./gradlew :hotRun --mainClass Filer --auto
 ```
 
-This enables automatic recompilation and hot swapping when you modify your code, making development much faster.
+This enables automatic recompilation and hot swapping when you modify your code.
 
-### Building a Native Distribution
+### Building Native Distributions
 
-To build a native distribution for your platform:
-
+#### Build for Current Platform
 ```bash
 ./gradlew packageDistributionForCurrentOS
 ```
 
-This will create a platform-specific installer in the `build/compose/binaries/main-release/{extension}/` directory.
+#### Platform-Specific Builds
+- **Windows**: `./gradlew packageMsi` or `./gradlew packageExe`
+- **macOS**: `./gradlew packageDmg`
+- **Linux**: `./gradlew packageDeb`
+
+#### Linux Debian Package with Enhanced Features
+For Linux users, there's a special task that creates a Debian package with proper desktop integration:
+```bash
+./gradlew packageDebWithWMClass
+```
+
+This task adds:
+- Proper StartupWMClass for dock grouping
+- Terminal command support (`filer` command)
+- Enhanced desktop menu integration
 
 ### Available Gradle Tasks
 
 - `./gradlew run` - Run the application
-- `./gradlew :runHot --mainClass Filer --auto` - Run with hot reload
-- `./gradlew packageDistributionForCurrentOS` - Build native distribution for current OS
-- `./gradlew packageDmg` - Build macOS DMG (macOS only)
-- `./gradlew packageMsi` - Build Windows MSI (Windows only)
-- `./gradlew packageExe` - Build Windows EXE (Windows only)
-- `./gradlew packageDeb` - Build Linux DEB (Linux only)
-
+- `./gradlew :hotRun --mainClass Filer --auto` - Run with hot reload
+- `./gradlew clean` - Clean build artifacts
+- `./gradlew packageDistributionForCurrentOS` - Build for current OS
+- `./gradlew packageReleaseDeb` - Build optimized Debian package
+- `./gradlew generateUpgradeUuid` - Generate UUID for Windows MSI updates
 
 ## Generated with Compose for Desktop Wizard
 

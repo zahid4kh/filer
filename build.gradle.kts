@@ -126,7 +126,7 @@ val desktopRelativePath = "opt/$packageName/lib/$packageName-$packageName.deskto
 val appDisplayName = "Filer"
 val mainClass = "Filer"
 val maintainer = "Zahid Khalilov <halilzahid@gmail.com>"
-val controlDescription = "Simple file manager"
+val controlDescription = "Simple file manager made with Compose"
 
 fun promptUserChoice(): String {
     println(

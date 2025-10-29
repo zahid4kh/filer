@@ -242,7 +242,7 @@ class MainViewModel(
     }
 
     fun isImage(file: String): Boolean{
-        val extensions = listOf("png", "jpeg", "jpg", "gif", "bmp", "webp")
+        val extensions = listOf("png", "jpeg", "jpg", "gif", "bmp")
         val fileExtension = File(file).extension.lowercase()
         return extensions.contains(fileExtension)
     }

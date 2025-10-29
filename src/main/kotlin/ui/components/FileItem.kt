@@ -50,11 +50,11 @@ fun FileItem(
     viewModel: MainViewModel
 ){
     LaunchedEffect(isHovered){
-        if(!isHovered && previewImage != null){
+        if(isHovered && viewModel.isImage(item)){
+            viewModel.previewImage(item)
+        } else if(!isHovered && previewImage != null){
             viewModel.resetImagePreview()
         }
-
-        viewModel.previewImage(item)
     }
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -128,7 +128,7 @@ fun FileItem(
                     state = rememberTooltipState()
                 ){
                     IconButton(
-                        onClick = {}
+                        onClick = {  }
                     ){
                         Icon(
                             imageVector = Icons.Default.RemoveRedEye,

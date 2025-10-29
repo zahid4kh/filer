@@ -214,22 +214,37 @@ class MainViewModel(
         val imageForPreview = File(image)
 
         viewModelScope.launch(Dispatchers.IO) {
-            if(isImage(image)){
-                val image = ImageIO.read(imageForPreview).toComposeImageBitmap()
-                withContext(Dispatchers.Main){
-                    _uiState.update { it.copy(imageForPreview = image) }
+            if(isImage(image) && imageForPreview.exists()){
+                try {
+                    val bufferedImage = ImageIO.read(imageForPreview)
+                    if (bufferedImage != null) {
+                        val imageBitmap = bufferedImage.toComposeImageBitmap()
+                        withContext(Dispatchers.Main){
+                            _uiState.update { it.copy(imageForPreview = imageBitmap) }
+                        }
+                    } else {
+                        withContext(Dispatchers.Main){
+                            _uiState.update { it.copy(imageForPreview = null) }
+                        }
+                    }
+                } catch (e: Exception) {
+                    println("Error reading image '$image': ${e.message}")
+                    withContext(Dispatchers.Main){
+                        _uiState.update { it.copy(imageForPreview = null) }
+                    }
                 }
-            }else {
-                _uiState.update { it.copy(imageForPreview = null) }
-                return@launch
+            } else {
+                withContext(Dispatchers.Main){
+                    _uiState.update { it.copy(imageForPreview = null) }
+                }
             }
         }
     }
 
     fun isImage(file: String): Boolean{
-        val extensions = listOf("png", "jpeg", "jpg")
-        val isImage = extensions.contains(File(file).extension)
-        return isImage
+        val extensions = listOf("png", "jpeg", "jpg", "gif", "bmp", "webp")
+        val fileExtension = File(file).extension.lowercase()
+        return extensions.contains(fileExtension)
     }
 
     fun resetImagePreview(){

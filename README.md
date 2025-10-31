@@ -4,6 +4,16 @@ A modern file manager desktop application built with Kotlin and Compose for Desk
 
 [![Kotlin](https://img.shields.io/badge/Kotlin-2.1.20-blue.svg?logo=kotlin)](https://kotlinlang.org) [![Compose](https://img.shields.io/badge/Compose-1.9.1-blue.svg?logo=jetpack-compose)](https://www.jetbrains.com/lp/compose-multiplatform/)
 
+## Screenshots
+
+![screenshot1](screenshots/img1.png)
+![imagepreview](screenshots/img2.png)
+
+## Demo videos
+
+1. [demo1](https://github.com/user-attachments/assets/99251956-6162-499e-a6a7-8e36f7fb9096)
+2. [demo2](https://github.com/user-attachments/assets/e9f8ec37-a4e3-4e86-891a-b0d52f8d26f6)
+
 ## Features
 
 - **File Management**
@@ -92,6 +102,11 @@ This task adds:
 - `./gradlew packageDistributionForCurrentOS` - Build for current OS
 - `./gradlew packageReleaseDeb` - Build optimized Debian package
 - `./gradlew generateUpgradeUuid` - Generate UUID for Windows MSI updates
+
+## TODO
+
+- add Favorites section in nav bar
+- add Recents section in nav bar
 
 ## Generated with Compose for Desktop Wizard
 
